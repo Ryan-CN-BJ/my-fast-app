@@ -14,7 +14,7 @@ _engine: AsyncEngine | None = None
 def get_async_engine():
     global _engine
     if _engine is None:
-        url = f"postgresql:asyncpg://{dbSetting.user}:{dbSetting.password}@{dbSetting.host}:{dbSetting.port}/{dbSetting.name}"
+        url = f"postgresql+asyncpg://{dbSetting.user}:{dbSetting.password}@{dbSetting.host}:{dbSetting.port}/{dbSetting.name}"
         _engine = create_async_engine(
             url, pool_size=10, max_overflow=20, pool_pre_ping=True, echo=True
         )
@@ -34,5 +34,5 @@ def get_session_factory():
 
 
 async def get_db() -> AsyncGenerator[AsyncSession]:
-    async with get_session_factory() as session:
+    async with get_session_factory().begin() as session:
         yield session
