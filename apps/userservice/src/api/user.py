@@ -5,27 +5,57 @@ from schema.user import UserRegister
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from schema.response import ApiResponse, PageResponse, PageData
+from schema.user import UserResponse
+
+from model.user import User
+
+
+from sqlalchemy import select, func
+from typing import Annotated
+
 router = APIRouter(prefix="/user")
 
 
-@router.get("/")
-def get_user(size: int = Query(default=10), page: int = Query(default=1)):
-    print(size, page)
-    return {"code": 200}
-
-
-@router.post("/add")
-def add_user(
-    email: str = Body(..., min_length=1, max_length=10, description="邮箱不能为空!"),
-    name: str = Body(..., min_length=1, max_length=10, description="姓名不能为空!"),
-):
-    return {"code": 200, "data": {"email": email, "name": name}}
-
-
-@router.post("/register")
+@router.post(
+    "/register",
+    response_model=ApiResponse[UserResponse],
+)
 async def register_user(
-    data: UserRegister = Body(..., description="用户注册信息"),
-    db: AsyncSession = Depends(get_db),
+    data: Annotated[UserRegister, Body(..., description="用户注册信息")],
+    db: Annotated[AsyncSession, Depends(get_db)],
 ):
     userservice = UserService(db)
-    return await userservice.regiser_user(data)
+    useResponse = await userservice.regiser_user(data)
+    return ApiResponse(data=useResponse)
+
+
+@router.get(
+    "/query",
+    response_model=ApiResponse[UserResponse],
+)
+async def get_user_by_id(
+    id: Annotated[int, Query(..., description="用户id")],
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    userservice = UserService(db)
+    useResponse: UserResponse = await userservice.get_user_by_id(id)
+    return ApiResponse(data=useResponse)
+
+
+@router.get("/all", response_model=PageResponse[UserResponse])
+async def get_users(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    page: Annotated[int, Query(description="页码")] = 1,
+    size: Annotated[int, Query(description="页容量")] = 10,
+    name: Annotated[str | None, Query(description="名字")] = None,
+):
+    userservice = UserService(db)
+    users = await userservice.get_all_user(page, size, name)
+    print("users", users)
+    result = [{"id": u.id, "name": u.name, "email": u.email} for u in users]
+    total = await db.scalar(
+        select(func.count(User.id)).where(User.name.ilike(f"%{name}%"))
+    )
+    data = PageData(records=result, page=page, size=size, total=total)
+    return PageResponse(data=data)
