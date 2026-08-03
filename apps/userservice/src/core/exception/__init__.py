@@ -11,7 +11,7 @@ from starlette.exceptions import HTTPException
 
 
 def register_exception_handler(app: FastAPI):
-    # app.add_exception_handler(HTTPException, http_exception_handler)
+    app.add_exception_handler(HTTPException, http_exception_handler)
     app.add_exception_handler(
         RequestValidationError, request_validate_exception_handler
     )
