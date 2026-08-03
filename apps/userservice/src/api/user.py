@@ -13,6 +13,7 @@ from model.user import User
 
 from sqlalchemy import select, func
 from typing import Annotated
+from fastapi.exceptions import HTTPException
 
 router = APIRouter(prefix="/user")
 
@@ -25,6 +26,7 @@ async def register_user(
     data: Annotated[UserRegister, Body(..., description="用户注册信息")],
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
+    raise HTTPException(404, "Forbidden")
     userservice = UserService(db)
     useResponse = await userservice.regiser_user(data)
     return ApiResponse(data=useResponse)
@@ -57,5 +59,16 @@ async def get_users(
     total = await db.scalar(
         select(func.count(User.id)).where(User.name.ilike(f"%{name}%"))
     )
-    data = PageData(records=result, page=page, size=size, total=total)
+    data = PageData(
+        records=result, page=page, size=size, total=0 if total is None else total
+    )
     return PageResponse(data=data)
+
+
+async def del_user_by_id(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    id: Annotated[str, Query(description="用户id")],
+):
+    userService = UserService(db)
+    await userService.del_user(id)
+    return ApiResponse()

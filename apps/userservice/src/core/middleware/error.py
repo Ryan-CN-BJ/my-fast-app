@@ -9,6 +9,7 @@ async def global_exception_middleware(request: Request, call_next):
         response = await call_next(request)
         return response
     except Exception as exc:
+        print("global_exception_middleware")
         return JSONResponse(
             status_code=422,
             content={

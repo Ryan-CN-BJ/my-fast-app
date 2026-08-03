@@ -52,4 +52,23 @@ class UserService(BaseService):
             .where(User.name.ilike(f"%{name}%"))
         )
         result = await self.db.execute(stm)
-        return result.scalars().all()
+        return [
+            UserResponse(name=user.name, email=user.email, id=user.id)
+            for user in result.scalars().all()
+        ]
+
+    async def del_user(self, id) -> bool:
+        try:
+            user = await self.db.get(User, id)
+            if user is None:
+                raise DatabaseException(message="用户不存在")
+            await self.db.delete(user)
+        except Exception as e:
+            print(e, "e")
+            if isinstance(e, DatabaseException):
+                raise e
+            else:
+                raise DatabaseException(
+                    original_exception=e, message="数据库操作失败！"
+                ) from e
+        return True
