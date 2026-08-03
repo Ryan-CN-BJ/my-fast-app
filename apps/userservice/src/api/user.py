@@ -13,7 +13,6 @@ from model.user import User
 
 from sqlalchemy import select, func
 from typing import Annotated
-from fastapi.exceptions import HTTPException
 
 router = APIRouter(prefix="/user")
 
@@ -26,7 +25,6 @@ async def register_user(
     data: Annotated[UserRegister, Body(..., description="用户注册信息")],
     db: Annotated[AsyncSession, Depends(get_db)],
 ):
-    raise HTTPException(404, "Forbidden")
     userservice = UserService(db)
     useResponse = await userservice.regiser_user(data)
     return ApiResponse(data=useResponse)
