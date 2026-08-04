@@ -61,11 +61,11 @@ class UserService(BaseService):
     async def del_user(self, id) -> bool:
         try:
             user = await self.db.get(User, id)
-            if user is None:
+            if user is None or user.is_deleted is True:
                 raise DatabaseException(message="用户不存在")
-            await self.db.delete(user)
+            user.is_deleted = True
         except Exception as e:
-            print(e, "e")
+            print(e, "eeee------------------------")
             if isinstance(e, DatabaseException):
                 raise e
             else:

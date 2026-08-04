@@ -63,10 +63,11 @@ async def get_users(
     return PageResponse(data=data)
 
 
+@router.get("/del", response_model=ApiResponse[dict])
 async def del_user_by_id(
     db: Annotated[AsyncSession, Depends(get_db)],
-    id: Annotated[str, Query(description="用户id")],
+    id: Annotated[int, Query(description="用户id")],
 ):
     userService = UserService(db)
-    await userService.del_user(id)
-    return ApiResponse()
+    await userService.del_user(id=id)
+    return ApiResponse(data={"id": id})

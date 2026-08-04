@@ -1,4 +1,10 @@
-from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    declared_attr,
+    Mapped,
+    mapped_column,
+    validates,
+)
 from sqlalchemy import Identity, DateTime, Boolean, func
 from datetime import datetime
 
@@ -34,3 +40,10 @@ class DeleteMixin:
     deleted_at: Mapped[
         Annotated[datetime | None, mapped_column(DateTime, nullable=True)]
     ]
+
+    @validates("is_deleted")
+    def validate_is_deleted(self, key, value):
+        # 当 is_deleted 被赋值为 True 时，设置 deleted_at
+        if value and self.deleted_at is None:
+            self.deleted_at = datetime.now()
+        return value
