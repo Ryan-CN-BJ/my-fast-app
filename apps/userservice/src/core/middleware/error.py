@@ -2,6 +2,7 @@ import json
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import ResponseValidationError
 
 
 async def global_exception_middleware(request: Request, call_next):
@@ -9,7 +10,7 @@ async def global_exception_middleware(request: Request, call_next):
         response = await call_next(request)
         return response
     except Exception as exc:
-        print("global_exception_middleware")
+        print(exc.__class__)
         return JSONResponse(
             status_code=422,
             content={
