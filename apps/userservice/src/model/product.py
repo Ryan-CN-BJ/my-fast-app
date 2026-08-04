@@ -9,9 +9,18 @@ if TYPE_CHECKING:
     from model.sku import Sku
 
 
+MAX_BRAND_LENGTH = 50
+MAX_NAME_LENGTH = 50
+MAX_DESCRIPTION_LENGTH = 200
+
+
 class Product(Base, DeleteMixin, IDMixin, TimestampMixin):
-    brand: Mapped[Annotated[str, mapped_column(String(50), nullable=False)]]
-    name: Mapped[Annotated[str, mapped_column(String(50), nullable=False)]]
-    description: Mapped[Annotated[str, mapped_column(String(200), nullable=False)]]
+    brand: Mapped[
+        Annotated[str, mapped_column(String(MAX_BRAND_LENGTH), nullable=False)]
+    ]
+    name: Mapped[Annotated[str, mapped_column(String(MAX_NAME_LENGTH), nullable=False)]]
+    description: Mapped[
+        Annotated[str, mapped_column(String(MAX_DESCRIPTION_LENGTH), nullable=False)]
+    ]
 
     skus: Mapped[list["Sku"]] = relationship(back_populates="product")

@@ -10,13 +10,19 @@ from decimal import Decimal
 if TYPE_CHECKING:
     from model.product import Product
 
+MAX_SKU_CODE_LENGTH = 50
+MAX_PRICE_DIGITS = 10
+MAX_PRICE_DECIMAL_PLACES = 2
+
 
 class Sku(Base, IDMixin, DeleteMixin, TimestampMixin):
     product_id: Mapped[
         Annotated[int, mapped_column(ForeignKey("product.id", ondelete="CASCADE"))]
     ]
 
-    sku_code: Mapped[Annotated[str, mapped_column(String(50), unique=True)]]
+    sku_code: Mapped[
+        Annotated[str, mapped_column(String(MAX_SKU_CODE_LENGTH), unique=True)]
+    ]
     price: Mapped[Annotated[Decimal, mapped_column(Numeric(10, 2))]]
     stock: Mapped[Annotated[int, mapped_column(default=0)]]
     attrs: Mapped[Annotated[dict, mapped_column(JSONB)]]
