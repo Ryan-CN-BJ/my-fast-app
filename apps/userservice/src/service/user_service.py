@@ -21,7 +21,6 @@ class UserService(BaseService):
             await self.db.flush()  # 因为下面要用到user.id,所以必须flush一次
             return UserResponse(id=user.id, name=user.name, email=user.email)
         except Exception as e:
-            print(e, "e")
             if isinstance(e, DatabaseException):
                 raise e
             else:

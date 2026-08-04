@@ -4,6 +4,7 @@ from fastapi import Request
 
 
 def request_validate_exception_handler(request: Request, exception: Exception):
+    print("request_validate_exception_handler")
     assert isinstance(exception, RequestValidationError)
     # error_messages = ", ".join(
     #     [error.get("msg", "参数校验失败") for error in exception.errors()]

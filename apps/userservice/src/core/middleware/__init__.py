@@ -3,7 +3,7 @@ from core.middleware import cors, error
 from fastapi import FastAPI
 import inspect
 
-MIDDLEWARES = [error.MIDDLEWARE, cors.MIDDLEWARE]
+MIDDLEWARES = [cors.MIDDLEWARE, error.MIDDLEWARE]
 
 
 def register_middlewates(app: FastAPI):
