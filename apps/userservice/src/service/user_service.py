@@ -73,7 +73,7 @@ class UserService(BaseService):
                     original_exception=e, message="数据库操作失败！"
                 ) from e
 
-    async def update_user(self, data: UserRegister) -> UserResponse:
+    async def update_user(self, data: UserResponse) -> UserResponse:
         try:
             user = await self.db.get(User, data.id)
             if user is None:
