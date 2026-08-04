@@ -20,6 +20,7 @@ class UserService(BaseService):
             self.db.add(user)
             await self.db.flush()
         except Exception as e:
+            print(e, "e")
             if isinstance(e, DatabaseException):
                 raise e
             else:

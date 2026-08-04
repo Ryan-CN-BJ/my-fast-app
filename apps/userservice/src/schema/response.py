@@ -27,3 +27,4 @@ class PageResponse(ApiResponse[PageData[T]]):
 class ErrorResponse(BaseModel):
     code: int = 400
     message: str = "出错了"
+    errors: list | None

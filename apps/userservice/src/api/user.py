@@ -22,8 +22,8 @@ router = APIRouter(prefix="/user")
     response_model=ApiResponse[UserResponse],
 )
 async def register_user(
-    data: Annotated[UserRegister, Body(..., description="用户注册信息")],
     db: Annotated[AsyncSession, Depends(get_db)],
+    data: Annotated[UserRegister, Body(..., description="用户注册信息")],
 ):
     userservice = UserService(db)
     useResponse = await userservice.regiser_user(data)
