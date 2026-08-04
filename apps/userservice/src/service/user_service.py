@@ -65,7 +65,6 @@ class UserService(BaseService):
                 raise DatabaseException(message="用户不存在")
             user.is_deleted = True
         except Exception as e:
-            print(e, "eeee------------------------")
             if isinstance(e, DatabaseException):
                 raise e
             else:
