@@ -71,3 +71,13 @@ async def del_user_by_id(
     userService = UserService(db)
     await userService.del_user(id=id)
     return ApiResponse(data={"id": id})
+
+
+@router.post("/update", response_model=ApiResponse[UserResponse])
+async def update_user(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    user: Annotated[UserResponse, Body(description="用户信息")],
+):
+    userservice = UserService(db)
+    user = await userservice.update_user(user)
+    return ApiResponse(data=user)

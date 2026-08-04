@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator, EmailStr, model_validator
+from pydantic import BaseModel, field_validator, EmailStr, model_validator, ConfigDict
 from pydantic_core import PydanticCustomError
 
 
@@ -35,3 +35,5 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: str
+
+    model_config = ConfigDict(from_attributes=True)
