@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from api.user import router as userRouter
 from api.product import router as productRouter
 from api.sku import router as skuRouter
+from api.category import router as categoryRouter
 
 from core.middleware import register_middlewates
 from core.exception import register_exception_handler
@@ -16,3 +17,4 @@ register_exception_handler(app)
 app.include_router(userRouter)
 app.include_router(productRouter)
 app.include_router(skuRouter)
+app.include_router(categoryRouter)
