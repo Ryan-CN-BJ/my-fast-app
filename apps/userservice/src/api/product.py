@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, Query
 
-from schema.product import ResponseProduct, CreateProduct
+from schema.product import ResponseProduct, CreateProduct, ResponseProductWithSkus
 from schema.response import ApiResponse
 
 from service.product_service import ProductService
@@ -19,3 +19,15 @@ async def add_product(
     product_service = ProductService(db)
     res = await product_service.add_product(product)
     return ApiResponse(data=res)
+
+
+@router.get(
+    "/query/productwithskus", response_model=ApiResponse[ResponseProductWithSkus]
+)
+async def get_product_with_skus(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    id: Annotated[int, Query(..., description="产品id")],
+):
+    productService = ProductService(db)
+    productWithSkus = await productService.get_product_width_sku(id)
+    return ApiResponse(data=productWithSkus)
