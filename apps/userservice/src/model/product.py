@@ -4,9 +4,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
 
 from typing import Annotated, TYPE_CHECKING
+from model.association.product_category import product_category
 
 if TYPE_CHECKING:
     from model.sku import Sku
+    from model.category import Category
 
 
 MAX_BRAND_LENGTH = 50
@@ -24,3 +26,7 @@ class Product(Base, DeleteMixin, IDMixin, TimestampMixin):
     ]
 
     skus: Mapped[list["Sku"]] = relationship(back_populates="product")
+
+    cates: Mapped[list["Category"]] = relationship(
+        secondary=product_category, back_populates="products"
+    )
