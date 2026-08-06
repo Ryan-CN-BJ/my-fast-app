@@ -34,8 +34,20 @@ async def get_product_with_skus(
     id: Annotated[int, Query(..., description="产品id")],
 ):
     productService = ProductService(db)
-    productWithSkus = await productService.get_product_width_sku(id)
+    productWithSkus = await productService.get_product_with_sku(id)
     return ApiResponse(data=productWithSkus)
+
+
+@router.get(
+    "/query/productwithcates", response_model=ApiResponse[ResponseProductWithCates]
+)
+async def get_product_width_skus(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    id: Annotated[int, Query(..., description="产品id")],
+):
+    product_service = ProductService(db)
+    res = await product_service.get_product_with_cate(id)
+    return ApiResponse(data=res)
 
 
 @router.post("/updatecates", response_model=ApiResponse[ResponseProductWithCates])
