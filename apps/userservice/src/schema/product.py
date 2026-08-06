@@ -21,13 +21,9 @@ class ResponseProduct(BaseModel):
     model_config = {"from_attributes": True}
 
 
-class ResponseProductWithSkus(BaseModel, ResponseProduct):
+class ResponseProductWithSkus(ResponseProduct):
     skus: list[ResponseSku]
 
-    model_config = {"from_attributes": True}
 
-
-class ResponseProductWithCates(BaseModel, ResponseProduct):
+class ResponseProductWithCates(ResponseProduct):
     cates: list[ResponseCategory]
-
-    model_config = {"from_attributes": True}
