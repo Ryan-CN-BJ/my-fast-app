@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from model.product import MAX_BRAND_LENGTH, MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH
 from typing import Annotated
 from schema.sku import ResponseSku
+from schema.category import ResponseCategory
 
 
 class CreateProduct(BaseModel):
@@ -20,11 +21,13 @@ class ResponseProduct(BaseModel):
     model_config = {"from_attributes": True}
 
 
-class ResponseProductWithSkus(BaseModel):
-    id: int
-    brand: Annotated[str, Field(max_length=MAX_BRAND_LENGTH)]
-    name: Annotated[str, Field(max_length=MAX_NAME_LENGTH)]
-    description: Annotated[str, Field(max_length=MAX_DESCRIPTION_LENGTH)]
+class ResponseProductWithSkus(BaseModel, ResponseProduct):
     skus: list[ResponseSku]
+
+    model_config = {"from_attributes": True}
+
+
+class ResponseProductWithCates(BaseModel, ResponseProduct):
+    cates: list[ResponseCategory]
 
     model_config = {"from_attributes": True}

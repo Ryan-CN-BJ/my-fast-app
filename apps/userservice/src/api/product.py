@@ -1,6 +1,11 @@
 from fastapi import APIRouter, Depends, Body, Query
 
-from schema.product import ResponseProduct, CreateProduct, ResponseProductWithSkus
+from schema.product import (
+    ResponseProduct,
+    CreateProduct,
+    ResponseProductWithSkus,
+    ResponseProductWithCates,
+)
 from schema.response import ApiResponse
 
 from service.product_service import ProductService
@@ -31,3 +36,16 @@ async def get_product_with_skus(
     productService = ProductService(db)
     productWithSkus = await productService.get_product_width_sku(id)
     return ApiResponse(data=productWithSkus)
+
+
+@router.post("/updatecates", response_model=ApiResponse[ResponseProductWithCates])
+async def add_category_to_prodcut(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    cate_ids: Annotated[list[int], Body(..., min_length=1, description="商品种类id")],
+    product_id: Annotated[int, Body(..., description="商品id")],
+):
+    product_service = ProductService(db)
+    res = await product_service.update_product_cates(
+        product_id=product_id, cate_ids=cate_ids
+    )
+    return ApiResponse(data=res)
