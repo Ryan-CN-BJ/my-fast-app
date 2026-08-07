@@ -24,16 +24,14 @@ class ProductService(BaseService):
         except Exception as e:
             raise DatabaseException(message="数据库操作失败！", original_exception=e)
 
-    async def get_product_width_sku(self, id: int) -> ResponseProductWithSkus:
+    async def get_product_with_sku(self, id: int) -> ResponseProductWithSkus:
         stm = (
             select(Product).options(selectinload(Product.skus)).where(Product.id == id)
         )
         productModel = await self.db.scalar(stm)
         return ResponseProductWithSkus.model_validate(productModel)
 
-    async def add_cate_to_product(
-        self, product_id: int, cate_ids: list[int]
-    ) -> ResponseProductWithCates:
+    async def get_product_with_cate(self, product_id: int) -> ResponseProductWithCates:
         try:
             stm = (
                 select(Product)
@@ -43,35 +41,6 @@ class ProductService(BaseService):
             productModel = (await self.db.execute(stm)).scalar()
             if productModel is None:
                 raise DatabaseException(message="商品不存在！")
-
-            if len(cate_ids) != len(set(cate_ids)):
-                raise DatabaseException(message="商品种类重复！")
-
-            cates: list[Category] = (
-                (
-                    await self.db.execute(
-                        select(Category).where(Category.id.in_(cate_ids))
-                    )
-                )
-                .scalars()
-                .all()
-            )
-
-            found_ids = {c.id for c in cates}
-            missing_ids = set(cate_ids) - found_ids
-            if missing_ids:
-                raise DatabaseException(
-                    message=f"以下分类不存在，{sorted(missing_ids)}"
-                )
-
-            produceCates = productModel.cates
-            existing_ids = {c.id for c in produceCates}
-            duplicated_ids = existing_ids & set(cate_ids)
-            if duplicated_ids:
-                raise DatabaseException(
-                    message=f"以下分类已经关联，请勿重复添加：{sorted(duplicated_ids)}"
-                )
-            productModel.cates.extend(cates)
             return ResponseProductWithCates.model_validate(productModel)
         except Exception as e:
             if isinstance(e, DatabaseException):
@@ -105,6 +74,6 @@ class ProductService(BaseService):
             missing = set(cate_ids) - {c.id for c in cates}
             raise DatabaseException(message=f"以下商品种类不合法,{sorted(missing)}")
 
-        productModel.cates = cates
+        productModel.cates = list(cates)
         await self.db.flush()
         return ResponseProductWithCates.model_validate(productModel)
