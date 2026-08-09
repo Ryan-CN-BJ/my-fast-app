@@ -10,6 +10,7 @@ resolution-markers = [
 members = [
     "my-fast-app",
     "userservice",
+    "utils",
 ]
 
 [[package]]
@@ -915,6 +916,7 @@ dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "psycopg2-binary" },
     { name = "sqlalchemy", extra = ["asyncio"] },
+    { name = "utils" },
 ]
 
 [package.metadata]
@@ -924,7 +926,13 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = "==0.136.3" },
     { name = "psycopg2-binary", specifier = "==2.9.12" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = "==2.0.50" },
+    { name = "utils", editable = "packages/utils" },
 ]
+
+[[package]]
+name = "utils"
+version = "0.1.0"
+source = { editable = "packages/utils" }
 
 [[package]]
 name = "uvicorn"
