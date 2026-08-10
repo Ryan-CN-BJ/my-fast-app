@@ -8,3 +8,16 @@ dependencies = []
 
 [tool.uv.workspace]
 members = ["apps/userservice", "packages/utils"]
+
+[too.uv]
+publish_url = "https://packages.aliyun.com/6a34d461d8362ae2652485c2/pypi/repo-fhghq"
+
+[[tool.uv.index]]
+name = "aliyun"
+url = "https://packages.aliyun.com/6a34d461d8362ae2652485c2/pypi/repo-fhghq"
+priority = "primary"
+
+[[tool.uv.index]]
+name = "mirror"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+priority = "default"
