@@ -1,17 +1,17 @@
 from fastapi import APIRouter, Depends, Body, Query
 
-from apps.userservice.src.userservice.schema.product import (
+from userservice.schema.product import (
     ResponseProduct,
     CreateProduct,
     ResponseProductWithSkus,
     ResponseProductWithCates,
 )
-from apps.userservice.src.userservice.schema.response import ApiResponse
+from userservice.schema.response import ApiResponse
 
-from apps.userservice.src.userservice.service.product_service import ProductService
+from userservice.service.product_service import ProductService
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
-from apps.userservice.src.userservice.core.db import get_db
+from userservice.core.db import get_db
 
 router = APIRouter(prefix="/product")
 

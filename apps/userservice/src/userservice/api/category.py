@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Body, Depends
-from apps.userservice.src.userservice.schema.response import ApiResponse
-from apps.userservice.src.userservice.schema.category import (
+from userservice.schema.response import ApiResponse
+from userservice.schema.category import (
     ResponseCategory,
     CreateCategory,
 )
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
-from apps.userservice.src.userservice.core.db import get_db
-from apps.userservice.src.userservice.service.category_service import CategoruService
+from userservice.core.db import get_db
+from userservice.service.category_service import CategoruService
 
 router = APIRouter(prefix="/cate")
 

@@ -1,4 +1,4 @@
-from apps.userservice.src.userservice.core.exception.base import BaseException
+from userservice.core.exception.base import BaseException
 
 
 class DatabaseException(BaseException):

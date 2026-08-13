@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse
 from fastapi import Request
-from apps.userservice.src.userservice.core.exception.databse import DatabaseException
+from userservice.core.exception.databse import DatabaseException
 from sqlalchemy.exc import IntegrityError
 
 

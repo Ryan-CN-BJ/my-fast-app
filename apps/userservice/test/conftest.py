@@ -31,7 +31,7 @@ _load_db_env()
 TEST_DB_NAME = os.environ.get("TEST_DB_NAME", "my_test_db")
 os.environ["DB_NAME"] = TEST_DB_NAME
 
-from core.config.dbconfig import dbSetting  # noqa: E402
+from userservice.core.config.dbconfig import dbSetting  # noqa: E402
 
 
 def pytest_sessionstart(session):
@@ -62,14 +62,8 @@ def recreate_database():
                 "AND pid <> pg_backend_pid()",
                 (dbSetting.name,),
             )
-            cur.execute(
-                psycopg2.sql.SQL(f"DROP DATABASE IF EXISTS {dbSetting.name}").format(
-                    db_ident
-                )
-            )
-            cur.execute(
-                psycopg2.sql.SQL(f"CREATE DATABASE {dbSetting.name}").format(db_ident)
-            )
+            cur.execute(psycopg2.sql.SQL("DROP DATABASE IF EXISTS {}").format(db_ident))
+            cur.execute(psycopg2.sql.SQL("CREATE DATABASE {}").format(db_ident))
     finally:
         conn.close()
 

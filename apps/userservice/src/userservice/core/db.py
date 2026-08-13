@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
 )
 
-from apps.userservice.src.userservice.core.config.dbconfig import dbSetting
+from userservice.core.config.dbconfig import dbSetting
 from collections.abc import AsyncGenerator
 
 _engine: AsyncEngine | None = None

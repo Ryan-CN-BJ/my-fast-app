@@ -1,4 +1,4 @@
-from apps.userservice.src.userservice.model.base import (
+from userservice.model.base import (
     Base,
     DeleteMixin,
     IDMixin,
@@ -9,13 +9,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
 
 from typing import Annotated, TYPE_CHECKING
-from apps.userservice.src.userservice.model.association.product_category import (
+from userservice.model.association.product_category import (
     product_category,
 )
 
 if TYPE_CHECKING:
-    from apps.userservice.src.userservice.model.sku import Sku
-    from apps.userservice.src.userservice.model.category import Category
+    from userservice.model.sku import Sku
+    from userservice.model.category import Category
 
 
 MAX_BRAND_LENGTH = 50

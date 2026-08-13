@@ -1,5 +1,5 @@
-from apps.userservice.src.userservice.core.middleware import cors
-from apps.userservice.src.userservice.core.middleware import error
+from userservice.core.middleware import cors
+from userservice.core.middleware import error
 
 from fastapi import FastAPI
 import inspect

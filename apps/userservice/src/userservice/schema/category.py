@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Annotated
-from apps.userservice.src.userservice.model.category import (
+from userservice.model.category import (
     MAX_NAME_LENGTH,
     MAX_DESCRIPTION_LENGTH,
 )

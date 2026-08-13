@@ -1,10 +1,10 @@
-from apps.userservice.src.userservice.service.base import BaseService
-from apps.userservice.src.userservice.schema.category import (
+from userservice.service.base import BaseService
+from userservice.schema.category import (
     CreateCategory,
     ResponseCategory,
 )
-from apps.userservice.src.userservice.model.category import Category
-from apps.userservice.src.userservice.core.exception.databse import DatabaseException
+from userservice.model.category import Category
+from userservice.core.exception.databse import DatabaseException
 
 
 class CategoruService(BaseService):

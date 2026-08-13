@@ -1,18 +1,18 @@
 from fastapi import APIRouter, Query, Body, Depends
-from apps.userservice.src.userservice.service.user_service import UserService
-from apps.userservice.src.userservice.core.db import get_db
-from apps.userservice.src.userservice.schema.user import UserRegister
+from userservice.service.user_service import UserService
+from userservice.core.db import get_db
+from userservice.schema.user import UserRegister
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.userservice.src.userservice.schema.response import (
+from userservice.schema.response import (
     ApiResponse,
     PageResponse,
     PageData,
 )
-from apps.userservice.src.userservice.schema.user import UserResponse
+from userservice.schema.user import UserResponse
 
-from apps.userservice.src.userservice.model.user import User
+from userservice.model.user import User
 
 
 from sqlalchemy import select, func

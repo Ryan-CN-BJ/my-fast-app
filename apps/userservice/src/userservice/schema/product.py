@@ -1,13 +1,13 @@
 from pydantic import BaseModel, Field
 
-from apps.userservice.src.userservice.model.product import (
+from userservice.model.product import (
     MAX_BRAND_LENGTH,
     MAX_DESCRIPTION_LENGTH,
     MAX_NAME_LENGTH,
 )
 from typing import Annotated
-from apps.userservice.src.userservice.schema.sku import ResponseSku
-from apps.userservice.src.userservice.schema.category import ResponseCategory
+from userservice.schema.sku import ResponseSku
+from userservice.schema.category import ResponseCategory
 
 
 class CreateProduct(BaseModel):

@@ -1,4 +1,4 @@
-from apps.userservice.src.userservice.core.config.commonConfig import CommonSettings
+from userservice.core.config.commonConfig import CommonSettings
 
 
 class WebSetting(CommonSettings):

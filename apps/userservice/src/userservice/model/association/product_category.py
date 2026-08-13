@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, ForeignKey
-from apps.userservice.src.userservice.model.base import Base
+from userservice.model.base import Base
 
 product_category = Table(
     "product_category",

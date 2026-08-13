@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from decimal import Decimal
 
 from typing import Annotated
-from apps.userservice.src.userservice.model.sku import (
+from userservice.model.sku import (
     MAX_SKU_CODE_LENGTH,
     MAX_PRICE_DIGITS,
     PRICE_DECIMAL_PLACES,

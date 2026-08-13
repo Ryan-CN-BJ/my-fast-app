@@ -1,5 +1,5 @@
 from fastapi.middleware.cors import CORSMiddleware
-from apps.userservice.src.userservice.core.config.webconfig import webSetting
+from userservice.core.config.webconfig import webSetting
 
 origins = [o.strip() for o in webSetting.cors_origins.split(",") if o.strip()]
 

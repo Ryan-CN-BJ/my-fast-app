@@ -1,4 +1,4 @@
-from apps.userservice.src.userservice.model.base import (
+from userservice.model.base import (
     Base,
     IDMixin,
     DeleteMixin,
@@ -8,12 +8,12 @@ from apps.userservice.src.userservice.model.base import (
 from typing import Annotated, TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
-from apps.userservice.src.userservice.model.association.product_category import (
+from userservice.model.association.product_category import (
     product_category,
 )
 
 if TYPE_CHECKING:
-    from apps.userservice.src.userservice.model.product import Product
+    from userservice.model.product import Product
 
 MAX_NAME_LENGTH = 50
 MAX_DESCRIPTION_LENGTH = 200

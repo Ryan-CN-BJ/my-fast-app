@@ -1,4 +1,4 @@
-from apps.userservice.src.userservice.model.base import (
+from userservice.model.base import (
     Base,
     IDMixin,
     TimestampMixin,

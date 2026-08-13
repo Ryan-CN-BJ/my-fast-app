@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
-from apps.userservice.src.userservice.core.db import get_db
+from userservice.core.db import get_db
 from typing import Annotated
-from apps.userservice.src.userservice.schema.sku import CreateSku
-from apps.userservice.src.userservice.service.sku_service import SkuService, ResponseSku
-from apps.userservice.src.userservice.schema.response import ApiResponse
+from userservice.schema.sku import CreateSku
+from userservice.service.sku_service import SkuService, ResponseSku
+from userservice.schema.response import ApiResponse
 
 router = APIRouter(prefix="/sku")
 

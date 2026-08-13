@@ -1,4 +1,4 @@
-from apps.userservice.src.userservice.model.base import (
+from userservice.model.base import (
     Base,
     DeleteMixin,
     TimestampMixin,
@@ -13,7 +13,7 @@ from typing import Annotated, TYPE_CHECKING
 from decimal import Decimal
 
 if TYPE_CHECKING:
-    from apps.userservice.src.userservice.model.product import Product
+    from userservice.model.product import Product
 
 MAX_SKU_CODE_LENGTH = 50
 MAX_PRICE_DIGITS = 10

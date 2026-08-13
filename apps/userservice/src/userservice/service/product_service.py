@@ -1,14 +1,14 @@
-from service.base import BaseService
+from userservice.service.base import BaseService
 
-from schema.product import (
+from userservice.schema.product import (
     CreateProduct,
     ResponseProduct,
     ResponseProductWithSkus,
     ResponseProductWithCates,
 )
-from model.product import Product
-from model.category import Category
-from core.exception.databse import DatabaseException
+from userservice.model.product import Product
+from userservice.model.category import Category
+from userservice.core.exception.databse import DatabaseException
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 

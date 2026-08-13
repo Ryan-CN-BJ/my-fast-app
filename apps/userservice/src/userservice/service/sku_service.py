@@ -1,8 +1,8 @@
-from service.base import BaseService
-from schema.sku import CreateSku, ResponseSku
-from model.sku import Sku
-from core.exception.databse import DatabaseException
-from model.product import Product
+from userservice.service.base import BaseService
+from userservice.schema.sku import CreateSku, ResponseSku
+from userservice.model.sku import Sku
+from userservice.core.exception.databse import DatabaseException
+from userservice.model.product import Product
 
 
 class SkuService(BaseService):

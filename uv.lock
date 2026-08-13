@@ -964,7 +964,7 @@ wheels = [
 [[package]]
 name = "userservice"
 version = "0.1.0"
-source = { virtual = "apps/userservice" }
+source = { editable = "apps/userservice" }
 dependencies = [
     { name = "alembic" },
     { name = "asyncpg" },

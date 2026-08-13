@@ -1,10 +1,10 @@
-from service.base import BaseService
-from schema.user import UserRegister, UserResponse
+from userservice.service.base import BaseService
+from userservice.schema.user import UserRegister, UserResponse
 
-from model.user import User
+from userservice.model.user import User
 from sqlalchemy import select
 
-from core.exception.databse import DatabaseException
+from userservice.core.exception.databse import DatabaseException
 
 
 class UserService(BaseService):
