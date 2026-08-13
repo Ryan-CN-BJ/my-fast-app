@@ -30,4 +30,3 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["test"]
 asyncio_mode = "auto"
-pythonpath = ["src"]

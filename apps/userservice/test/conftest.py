@@ -1,5 +1,6 @@
 import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 import psycopg2
@@ -7,9 +8,9 @@ import psycopg2.sql
 from alembic import command
 from alembic.config import Config
 
-SRC_DIR = Path(__file__).resolve().parent.parent / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
+# SRC_DIR = Path(__file__).resolve().parent.parent / "src"
+# if str(SRC_DIR) not in sys.path:
+#     sys.path.insert(0, str(SRC_DIR))
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = PROJECT_DIR.parent.parent / ".env"
@@ -40,10 +41,11 @@ def pytest_sessionstart(session):
 
 
 def pytest_sessionfinish(session, exitstatus):
-    print("pytest_sessionend+++++++")
+    drop_database()
 
 
-def recreate_database():
+@contextmanager
+def maintenance_connection():
     conn = psycopg2.connect(
         user=dbSetting.user,
         password=dbSetting.password,
@@ -52,20 +54,39 @@ def recreate_database():
         dbname="postgres",
     )
     conn.autocommit = True
-    db_ident = psycopg2.sql.Identifier(dbSetting.name)
     try:
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT pg_terminate_backend(pg_stat_activity.pid) "
-                "FROM pg_stat_activity "
-                "WHERE pg_stat_activity.datname = %s "
-                "AND pid <> pg_backend_pid()",
-                (dbSetting.name,),
-            )
-            cur.execute(psycopg2.sql.SQL("DROP DATABASE IF EXISTS {}").format(db_ident))
-            cur.execute(psycopg2.sql.SQL("CREATE DATABASE {}").format(db_ident))
+        yield conn
     finally:
         conn.close()
+
+
+def _drop_database(conn):
+    db_ident = psycopg2.sql.Identifier(dbSetting.name)
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT pg_terminate_backend(pg_stat_activity.pid) "
+            "FROM pg_stat_activity "
+            "WHERE pg_stat_activity.datname = %s "
+            "AND pid <> pg_backend_pid()",
+            (dbSetting.name,),
+        )
+        cur.execute(psycopg2.sql.SQL("DROP DATABASE IF EXISTS {}").format(db_ident))
+
+
+def drop_database():
+    with maintenance_connection() as conn:
+        _drop_database(conn)
+
+
+def recreate_database():
+    with maintenance_connection() as conn:
+        _drop_database(conn)
+        with conn.cursor() as cur:
+            cur.execute(
+                psycopg2.sql.SQL("CREATE DATABASE {}").format(
+                    psycopg2.sql.Identifier(dbSetting.name)
+                )
+            )
 
 
 def run_alembic_migration():
