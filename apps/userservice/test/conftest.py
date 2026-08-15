@@ -8,6 +8,11 @@ import psycopg2.sql
 from alembic import command
 from alembic.config import Config
 
+import signal
+import subprocess
+import time
+from subprocess import Popen
+
 # SRC_DIR = Path(__file__).resolve().parent.parent / "src"
 # if str(SRC_DIR) not in sys.path:
 #     sys.path.insert(0, str(SRC_DIR))
@@ -38,10 +43,12 @@ from userservice.core.config.dbconfig import dbSetting  # noqa: E402
 def pytest_sessionstart(session):
     recreate_database()
     run_alembic_migration()
+    _start_server()
 
 
 def pytest_sessionfinish(session, exitstatus):
     drop_database()
+    _stop_server()
 
 
 @contextmanager
@@ -76,6 +83,67 @@ def _drop_database(conn):
 def drop_database():
     with maintenance_connection() as conn:
         _drop_database(conn)
+
+
+server_port = "18000"
+
+_server_process: Popen | None = None
+_log_file = None
+
+
+def _start_server():
+    global server_port, _log_file, _server_process
+
+    tmp_dir = Path(__file__).resolve().parent.parent.parent / "temp"
+    tmp_dir.mkdir(exist_ok=True)
+    _log_file = open(tmp_dir / "test_server.log", "w")
+    _server_process = subprocess.Popen(
+        [
+            "uv",
+            "run",
+            "--package",
+            "userservice",
+            "fastapi",
+            "dev",
+            "apps/userservice/src/userservice/main.py",
+            "--port",
+            server_port,
+        ],
+        shell=False,
+        # start_new_session=True,
+        stdout=_log_file,
+    )
+
+    import httpx
+
+    for _ in range(50):
+        try:
+            res = httpx.get(
+                f"http://localhost:{server_port}/docs",
+                trust_env=False,
+                timeout=2,
+            )
+            if res.status_code == 200:
+                break
+        except Exception as e:
+            pass
+        time.sleep(0.1)
+    else:
+        raise RuntimeError("测试服务器启动失败！")
+
+
+def _stop_server():
+    global _server_process, _log_file
+    if _server_process is not None:
+        try:
+            os.killpg(_server_process.pid, signal.SIGTERM)
+            _server_process.wait(timeout=10)
+            _server_process = None
+        except Exception as e:
+            os.killpg(_server_process.pid, signal.SIGKILL)
+    if _log_file is not None:
+        _log_file.close()
+        _log_file = None
 
 
 def recreate_database():

@@ -1,0 +1,14 @@
+
+ ⚡️ Starting FastAPI in development mode
+['*'] origins
+ 
+ 🐍 Using import string: userservice.main:app
+ 
+ 🌐 Server started at http://127.0.0.1:18000
+    Documentation at http://127.0.0.1:18000/docs
+ 
+  Logs:
+ 
+['*'] origins
+INFO:     127.0.0.1:60967 - "GET /docs HTTP/1.1" 200 OK
+
