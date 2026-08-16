@@ -12,6 +12,7 @@ import signal
 import subprocess
 import time
 from subprocess import Popen
+import pytest
 
 # SRC_DIR = Path(__file__).resolve().parent.parent / "src"
 # if str(SRC_DIR) not in sys.path:
@@ -135,12 +136,14 @@ def _start_server():
 def _stop_server():
     global _server_process, _log_file
     if _server_process is not None:
-        try:
-            os.killpg(_server_process.pid, signal.SIGTERM)
-            _server_process.wait(timeout=10)
-            _server_process = None
-        except Exception as e:
-            os.killpg(_server_process.pid, signal.SIGKILL)
+        _server_process.terminate()
+        _server_process.wait(timeout=10)
+        # try:
+        #     os.killpg(_server_process.pid, signal.SIGTERM)
+        #     _server_process.wait(timeout=10)
+        #     _server_process = None
+        # except Exception as e:
+        #     os.killpg(_server_process.pid, signal.SIGKILL)
     if _log_file is not None:
         _log_file.close()
         _log_file = None
@@ -160,3 +163,29 @@ def recreate_database():
 def run_alembic_migration():
     cfg = Config(str(PROJECT_DIR / "alembic.ini"))
     command.upgrade(cfg, "head")
+
+
+from userservice.core.db import get_db
+from sqlalchemy import text
+
+
+@pytest.fixture
+async def db_session():
+    from userservice.core.db import get_db
+
+    async for db in get_db():
+        yield db
+        break
+
+
+@pytest.fixture(autouse=True)
+async def clean_database(db_session):
+    result = await db_session.execute(
+        text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
+    )
+    tables = [row[0] for row in result.fetchall()]
+
+    # 清除所有表数据
+    for table in tables:
+        await db_session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
+    yield  # 执行测试
