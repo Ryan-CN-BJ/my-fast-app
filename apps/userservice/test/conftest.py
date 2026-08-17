@@ -168,27 +168,17 @@ from userservice.core.db import get_db
 from sqlalchemy import text
 
 
-@pytest.fixture
-async def db_session():
-    from userservice.core.db import get_db
-
-    async for db in get_db():
-        yield db
-        break
-
-
 @pytest.fixture(autouse=True)
-async def clean_database(db_session):
-    result = await db_session.execute(
-        text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
-    )
-    tables = [row[0] for row in result.fetchall()]
+async def clean_database():
+    from userservice.core.db import get_session_factory
 
-    # 清除所有表数据
-    for table in tables:
-        await db_session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
-    await db_session.commit()
-    yield  # 执行测试
+    async with get_session_factory().begin() as session:
+        result = await session.execute(
+            text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
+        )
+        for table in [row[0] for row in result.fetchall()]:
+            await session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
+    yield
 
 
 @pytest.fixture
