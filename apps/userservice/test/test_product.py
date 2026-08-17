@@ -4,7 +4,8 @@ from httpx import AsyncClient
 class TestProduct:
     async def test_create_product(self, async_client: AsyncClient):
         res = await async_client.post(
-            "/product/add", json={"brand": "123", "name": "123", "description": "123"}
+            "/product/add",
+            json={"brand": "123", "name": "测试pytest", "description": "123"},
         )
         print(res, "res")
         data = res.json()["data"]
