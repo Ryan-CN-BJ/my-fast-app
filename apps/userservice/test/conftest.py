@@ -8,7 +8,6 @@ import psycopg2.sql
 from alembic import command
 from alembic.config import Config
 
-import signal
 import subprocess
 import time
 from subprocess import Popen
@@ -188,4 +187,15 @@ async def clean_database(db_session):
     # 清除所有表数据
     for table in tables:
         await db_session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
+    await db_session.commit()
     yield  # 执行测试
+
+
+@pytest.fixture
+async def async_client():
+    from httpx import AsyncClient
+
+    async with AsyncClient(
+        base_url=f"http://localhost:{server_port}", trust_env=False
+    ) as client:
+        yield client

@@ -10,5 +10,16 @@
   Logs:
  
 ['*'] origins
-INFO:     127.0.0.1:52609 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54233 - "GET /docs HTTP/1.1" 200 OK
+2026-08-17 10:11:19,952 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+2026-08-17 10:11:19,952 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-08-17 10:11:19,954 INFO sqlalchemy.engine.Engine select current_schema()
+2026-08-17 10:11:19,955 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-08-17 10:11:19,957 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+2026-08-17 10:11:19,957 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-08-17 10:11:19,958 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-08-17 10:11:19,960 INFO sqlalchemy.engine.Engine INSERT INTO product (brand, name, description, is_deleted, deleted_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::BOOLEAN, $5::TIMESTAMP WITHOUT TIME ZONE) RETURNING product.id, product.created_at, product.updated_at
+2026-08-17 10:11:19,960 INFO sqlalchemy.engine.Engine [generated in 0.00020s] ('123', '123', '123', False, None)
+INFO:     127.0.0.1:54236 - "POST /product/add HTTP/1.1" 200 OK
+2026-08-17 10:11:19,967 INFO sqlalchemy.engine.Engine COMMIT
 
