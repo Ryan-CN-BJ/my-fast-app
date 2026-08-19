@@ -1,4 +1,5 @@
 from httpx import AsyncClient
+import pytest
 
 
 class TestProduct:
@@ -13,6 +14,7 @@ class TestProduct:
         assert data["brand"] == "123"
         assert data["id"] is not None
 
+    @pytest.mark.smoke
     async def test_create_get_product(self, async_client: AsyncClient):
         res = await async_client.post(
             "/product/add",
