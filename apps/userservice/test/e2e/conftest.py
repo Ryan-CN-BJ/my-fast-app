@@ -17,7 +17,7 @@ import pytest
 # if str(SRC_DIR) not in sys.path:
 #     sys.path.insert(0, str(SRC_DIR))
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 ENV_FILE = PROJECT_DIR.parent.parent / ".env"
 
 
