@@ -25,6 +25,9 @@ priority = "default"
 [tool.pytest.ini_options]
 testpaths = ["apps/userservice/test"]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+markers = ['smoke:冒烟测试，快速验证核心功能']
 
 [dependency-groups]
 dev = [
