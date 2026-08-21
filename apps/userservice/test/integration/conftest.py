@@ -9,27 +9,30 @@ import psycopg2.sql
 from contextlib import contextmanager
 from alembic.config import Config
 from alembic import command
+from dotenv import load_dotenv
 
+ENV_FILE = Path(__file__).parent.parent.parent.parent.parent / ".env.example"
 
+load_dotenv(ENV_FILE)
 # 加载环境变量
-def _load_env():
-    _env_file = Path(__file__).parent.parent.parent.parent.parent / ".env"
-    for line in _env_file.read_text().splitlines():
-        line = line.strip()
-        if (
-            not line
-            or line.startswith("#")
-            or "=" not in line
-            or not line.startswith("DB")
-        ):
-            continue
-        key, value = line.split("=", 1)
-        key = key.strip()
-        value = value.strip()
-        os.environ[key] = value
+# def _load_env():
+#     _env_file = Path(__file__).parent.parent.parent.parent.parent / ".env"
+#     for line in _env_file.read_text().splitlines():
+#         line = line.strip()
+#         if (
+#             not line
+#             or line.startswith("#")
+#             or "=" not in line
+#             or not line.startswith("DB")
+#         ):
+#             continue
+#         key, value = line.split("=", 1)
+#         key = key.strip()
+#         value = value.strip()
+#         os.environ[key] = value
 
 
-_load_env()
+# _load_env()
 
 os.environ["DB_NAME"] = "my_test_db"
 from userservice.core.config.dbconfig import DbSetting
