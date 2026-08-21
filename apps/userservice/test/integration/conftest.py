@@ -32,7 +32,9 @@ def _load_env():
 _load_env()
 
 os.environ["DB_NAME"] = "my_test_db"
-from userservice.core.config.dbconfig import dbSetting
+from userservice.core.config.dbconfig import DbSetting
+
+dbSetting = DbSetting()
 
 
 # 创建数据库同步连接

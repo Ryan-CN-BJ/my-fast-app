@@ -37,7 +37,9 @@ _load_db_env()
 TEST_DB_NAME = os.environ.get("TEST_DB_NAME", "my_test_db")
 os.environ["DB_NAME"] = TEST_DB_NAME
 
-from userservice.core.config.dbconfig import dbSetting  # noqa: E402
+from userservice.core.config.dbconfig import DbSetting  # noqa: E402
+
+dbSetting = DbSetting()
 
 
 def pytest_sessionstart(session):
