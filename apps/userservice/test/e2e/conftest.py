@@ -39,7 +39,7 @@ load_dotenv(ENV_FILE)
 
 
 # _load_db_env()
-TEST_DB_NAME = os.environ.get("TEST_DB_NAME", "my_test_db")
+TEST_DB_NAME = os.environ.get("TEST_DB_NAME", "my_e2e_test_db")
 os.environ["DB_NAME"] = TEST_DB_NAME
 
 from userservice.core.config.dbconfig import DbSetting  # noqa: E402

@@ -34,7 +34,7 @@ load_dotenv(ENV_FILE)
 
 # _load_env()
 
-os.environ["DB_NAME"] = "my_test_db"
+os.environ["DB_NAME"] = "my_integration_test_db"
 from userservice.core.config.dbconfig import DbSetting
 
 dbSetting = DbSetting()
