@@ -13,5 +13,5 @@ wheels/
 .coverage
 temp
 htmlcov
-
+coverage
 

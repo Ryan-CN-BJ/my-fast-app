@@ -13,31 +13,38 @@ import time
 from subprocess import Popen
 import pytest
 
+from dotenv import load_dotenv
+
 # SRC_DIR = Path(__file__).resolve().parent.parent / "src"
 # if str(SRC_DIR) not in sys.path:
 #     sys.path.insert(0, str(SRC_DIR))
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_FILE = PROJECT_DIR.parent.parent / ".env"
+ENV_FILE = PROJECT_DIR.parent.parent / ".env.example"
 
 
-def _load_db_env():
-    if ENV_FILE.is_file():
-        for line in ENV_FILE.read_text().splitlines():
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            key, value = key.strip(), value.strip().strip('"').strip("'")
-            if key.startswith("DB_") and key not in os.environ:
-                os.environ[key] = value
+load_dotenv(ENV_FILE)
 
 
-_load_db_env()
-TEST_DB_NAME = os.environ.get("TEST_DB_NAME", "my_test_db")
+# def _load_db_env():
+#     if ENV_FILE.is_file():
+#         for line in ENV_FILE.read_text().splitlines():
+#             line = line.strip()
+#             if not line or line.startswith("#") or "=" not in line:
+#                 continue
+#             key, value = line.split("=", 1)
+#             key, value = key.strip(), value.strip().strip('"').strip("'")
+#             if key.startswith("DB_") and key not in os.environ:
+#                 os.environ[key] = value
+
+
+# _load_db_env()
+TEST_DB_NAME = os.environ.get("TEST_DB_NAME", "my_e2e_test_db")
 os.environ["DB_NAME"] = TEST_DB_NAME
 
-from userservice.core.config.dbconfig import dbSetting  # noqa: E402
+from userservice.core.config.dbconfig import DbSetting  # noqa: E402
+
+dbSetting = DbSetting()
 
 
 def pytest_sessionstart(session):
