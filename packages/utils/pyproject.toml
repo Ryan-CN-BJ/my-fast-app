@@ -5,7 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Ryan-CN-BJ", email = "maorunjie2025@qq.com" }]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "alibabacloud-credentials>=1.0.12",
+    "alibabacloud-sts20150401>=1.2.0",
+    "alibabacloud-tea-openapi>=0.4.6",
+]
 
 [build-system]
 requires = ["uv_build>=0.11.22,<0.12.0"]
