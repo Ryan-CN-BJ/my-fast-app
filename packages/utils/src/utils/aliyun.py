@@ -102,7 +102,8 @@ async def generate_upload_params(filename):
             {"x-oss-security-token": security_token},
             {"x-oss-date": dt_obj_1},
             ["content-length-range", 1, 1024 * 10],
-            ["in", "$content-type", ["image/jpeg", "image/png"]],
+            ["eq", "$content-type", content_type],
+            # ["in", "$content-type", ["image/jpeg", "image/png"]],
             ["eq", "$key", key],
         ],
     }
@@ -128,5 +129,6 @@ async def generate_upload_params(filename):
         # "dir": upload_dir,
         "security_token": security_token,  # 安全令牌
         "key": key,
+        "content_type": content_type,
     }
     return response_data
