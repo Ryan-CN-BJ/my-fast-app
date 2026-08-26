@@ -13,4 +13,6 @@ class SettingGroup(Base, IDMixin, DeleteMixin, TimestampMixin):
     display_name: Mapped[Annotated[str, mapped_column(String(200), default="")]]
     description: Mapped[Annotated[str, mapped_column(String(200), default="")]]
 
-    settings: Mapped[list["Setting"]] = relationship(back_populates="group")
+    settings: Mapped[list["Setting"]] = relationship(
+        back_populates="group", passive_deletes=True, cascade="all,delete-orphan"
+    )
