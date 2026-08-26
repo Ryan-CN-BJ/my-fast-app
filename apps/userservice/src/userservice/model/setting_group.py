@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 
 class SettingGroup(Base, IDMixin, DeleteMixin, TimestampMixin):
-    key: Annotated[Mapped[str], mapped_column(String(100), unique=True)]
-    display_name: Annotated[Mapped[str], mapped_column(String(200), default="")]
-    description: Annotated[Mapped[str], mapped_column(String(200), default="")]
+    key: Mapped[Annotated[str, mapped_column(String(100), unique=True)]]
+    display_name: Mapped[Annotated[str, mapped_column(String(200), default="")]]
+    description: Mapped[Annotated[str, mapped_column(String(200), default="")]]
 
     settings: Mapped[list["Setting"]] = relationship(back_populates="group")

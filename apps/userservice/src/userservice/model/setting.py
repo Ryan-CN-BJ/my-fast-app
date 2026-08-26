@@ -8,13 +8,13 @@ if TYPE_CHECKING:
 
 
 class Setting(Base, IDMixin, TimestampMixin, DeleteMixin):
-    key: Annotated[Mapped[str], mapped_column(String(50), unique=True)]
-    value: Annotated[Mapped[str], mapped_column(String(200), default="")]
-    display_name: Annotated[Mapped[str], mapped_column(String(200), default="")]
-    description: Annotated[Mapped[str], mapped_column(String(200), default="")]
+    key: Mapped[Annotated[str, mapped_column(String(50), unique=True)]]
+    value: Mapped[Annotated[str, mapped_column(String(200), default="")]]
+    display_name: Mapped[Annotated[str, mapped_column(String(200), default="")]]
+    description: Mapped[Annotated[str, mapped_column(String(200), default="")]]
 
-    group_id: Annotated[
-        Mapped[int], mapped_column(ForeignKey("settingGroup.id", ondelete="CASCADE"))
+    group_id: Mapped[
+        Annotated[int, mapped_column(ForeignKey("settinggroup.id", ondelete="CASCADE"))]
     ]
 
     group: Mapped["SettingGroup"] = relationship(back_populates="settings")
