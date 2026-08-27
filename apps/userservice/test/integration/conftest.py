@@ -103,6 +103,8 @@ def pytest_sessionfinish(session):
 from userservice.core.db import get_session_factory
 from sqlalchemy import text
 
+_SKIP_CLEANUP_TABLES = ["setting", "settinggroup"]
+
 
 @pytest.fixture(autouse=True)
 async def clean_db():
@@ -115,6 +117,8 @@ async def clean_db():
         )
         tables = [row[0] for row in result.fetchall()]
         for table in tables:
+            if table in _SKIP_CLEANUP_TABLES:
+                continue
             await session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
 
 

@@ -174,6 +174,8 @@ def run_alembic_migration():
 from userservice.core.db import get_db
 from sqlalchemy import text
 
+_SKIP_CLEANUP_TABLES = ["setting", "settinggroup"]
+
 
 @pytest.fixture(autouse=True)
 async def clean_database():
@@ -184,6 +186,8 @@ async def clean_database():
             text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
         )
         for table in [row[0] for row in result.fetchall()]:
+            if table in _SKIP_CLEANUP_TABLES:
+                continue
             await session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
     yield
 
