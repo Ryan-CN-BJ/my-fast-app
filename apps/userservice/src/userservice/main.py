@@ -8,8 +8,19 @@ from userservice.api.category import router as categoryRouter
 from userservice.core.middleware import register_middlewates
 from userservice.core.exception import register_exception_handler
 from userservice.schema.response import ErrorResponse
+from userservice.core.db import get_session_factory
+from userservice.service.setting_service import SettingService
+from contextlib import asynccontextmanager
 
-app = FastAPI(responses={"default": {"model": ErrorResponse}})
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with get_session_factory().begin() as session:
+        await SettingService(db=session).initialize()
+    yield
+
+
+app = FastAPI(lifespan=lifespan, responses={"default": {"model": ErrorResponse}})
 
 register_middlewates(app)
 register_exception_handler(app)

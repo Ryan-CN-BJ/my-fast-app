@@ -16,7 +16,7 @@ def get_async_engine():
     if _engine is None:
         url = f"postgresql+asyncpg://{dbSetting.user}:{dbSetting.password}@{dbSetting.host}:{dbSetting.port}/{dbSetting.name}"
         _engine = create_async_engine(
-            url, pool_size=10, max_overflow=20, pool_pre_ping=True, echo=True
+            url, pool_size=10, max_overflow=20, pool_pre_ping=True, echo=False
         )
     return _engine
 
