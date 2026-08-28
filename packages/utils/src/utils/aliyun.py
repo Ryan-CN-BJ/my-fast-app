@@ -1,7 +1,6 @@
 from alibabacloud_tea_openapi.models import Config
 from alibabacloud_sts20150401.client import Client as Sts20150401Client
 from alibabacloud_sts20150401 import models as sts_20150401_models
-import os
 import json
 import base64
 import hmac
