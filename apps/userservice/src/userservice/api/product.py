@@ -33,8 +33,11 @@ async def get_product_with_skus(
     db: Annotated[AsyncSession, Depends(get_db)],
     id: Annotated[int, Query(..., description="产品id")],
 ):
+    print(id, "id------------------")
     productService = ProductService(db)
     productWithSkus = await productService.get_product_with_sku(id)
+    # await db.close()
+    # productWithSkus = await productService.get_product_with_sku(id)
     return ApiResponse(data=productWithSkus)
 
 

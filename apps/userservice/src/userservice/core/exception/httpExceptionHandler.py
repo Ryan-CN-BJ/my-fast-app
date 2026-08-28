@@ -6,7 +6,7 @@ from starlette.exceptions import HTTPException
 
 
 def http_exception_handler(request: Request, exception: Exception):
-    print("http_exception_handler-----")
+    print("http_exception_handler-----", exception)
     return JSONResponse(
         status_code=422,
         content={
