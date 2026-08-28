@@ -1,17 +1,28 @@
 import httpx
 from dotenv import load_dotenv
 from pathlib import Path
-import base64
+import os
 
-ENV_FILE = Path(__file__).parent.parent.parent.parent.parent / ".env.test"
-load_dotenv(ENV_FILE)
 
-from utils.aliyun import generate_upload_params
+from utils.aliyun import AliyunOSSConfig, AliyunOssUpload
 
 
 class TestAliyunUpload:
     async def test_upload(self):
-        cred = await generate_upload_params("1.png")
+        ENV_FILE = Path(__file__).parent.parent.parent.parent.parent / ".env.test"
+        load_dotenv(ENV_FILE)
+        config = AliyunOSSConfig(
+            OSS_ENDPOINT=os.environ.get("OSS_ENDPOINT"),
+            OSS_REGION_ID=os.environ.get("OSS_REGION_ID"),
+            OSS_ACCESS_KEY_ID=os.environ.get("OSS_ACCESS_KEY_ID"),
+            OSS_ACCESS_KEY_SECRET=os.environ.get("OSS_ACCESS_KEY_SECRET"),
+            OSS_BUCKET_NAME=os.environ.get("OSS_BUCKET_NAME"),
+            OSS_STS_ROLE_ARN=os.environ.get("OSS_STS_ROLE_ARN"),
+        )
+
+        uploader = AliyunOssUpload(config=config, filename="1.png")
+
+        cred = await uploader.generate_upload_params()
 
         IMAGE = Path(__file__).parent / "tiny.png"
         image_bytes = IMAGE.read_bytes()
