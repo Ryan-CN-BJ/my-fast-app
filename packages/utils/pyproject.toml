@@ -10,6 +10,7 @@ dependencies = [
     "alibabacloud-sts20150401>=1.2.0",
     "alibabacloud-tea-openapi>=0.4.6",
     "argon2-cffi>=25.1.0",
+    "pyjwt>=2.13.0",
 ]
 
 [build-system]
