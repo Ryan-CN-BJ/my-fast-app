@@ -18,3 +18,20 @@ class PasswordService:
             return False
         except Argon2Error:
             return False
+
+
+def create_token(data:dict,secret_key:str,*,):
+    payload = data.copy()
+    if 'sub' in payload and not isinstance(payload['sub'],str)
+        payload['sub'] = str(payload['sub'])
+        
+
+    payload.update({
+        ''
+    })
+
+    jwt.encode(
+        payload=data,
+        key=secret_key,
+        algorithm=''
+    )
