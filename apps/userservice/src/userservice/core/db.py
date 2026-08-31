@@ -44,9 +44,9 @@ async def get_db() -> AsyncGenerator[AsyncSession]:
     try:
         yield session
     except:
-        session.rollback()
+        await session.rollback()
         raise
     else:
-        session.commit()
+        await session.commit()
     finally:
-        session.close()
+        await session.close()

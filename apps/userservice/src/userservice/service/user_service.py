@@ -6,6 +6,8 @@ from sqlalchemy import select
 
 from userservice.core.exception.databse import DatabaseException
 
+from utils.auth import PasswordService
+
 
 class UserService(BaseService):
     async def regiser_user(self, data: UserRegister) -> UserResponse:
@@ -17,6 +19,7 @@ class UserService(BaseService):
             if existing_user:
                 raise DatabaseException("该用户已存在！")
             user = User(**data.model_dump(exclude={"confirmPwd"}))
+            user.pwd = PasswordService().hash_password(user.pwd)
             self.db.add(user)
             await self.db.flush()  # 因为下面要用到user.id,所以必须flush一次
             return UserResponse(id=user.id, name=user.name, email=user.email)
