@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query, Body, Depends
 from userservice.service.user_service import UserService
 from userservice.core.db import get_db
-from userservice.schema.user import UserRegister
+from userservice.schema.user import UserRegister, UserLoginRequest, UserLoginResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -85,3 +85,13 @@ async def update_user(
     userservice = UserService(db)
     user = await userservice.update_user(user)
     return ApiResponse(data=user)
+
+
+@router.post("/login", response_model=ApiResponse[UserLoginResponse])
+async def login(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    data: Annotated[UserLoginRequest, Body(description="用户邮箱，密码")],
+):
+    userService = UserService(db)
+    userLoginResponse = await userService.login(pwd=data.pwd, email=data.email)
+    return ApiResponse(data=userLoginResponse)

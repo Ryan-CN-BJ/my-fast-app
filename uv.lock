@@ -1900,6 +1900,7 @@ dependencies = [
     { name = "asyncpg" },
     { name = "fastapi", extra = ["standard"] },
     { name = "psycopg2-binary" },
+    { name = "pyjwt" },
     { name = "sqlalchemy", extra = ["asyncio"] },
     { name = "utils" },
 ]
@@ -1910,6 +1911,7 @@ requires-dist = [
     { name = "asyncpg", specifier = "==0.31.0" },
     { name = "fastapi", extras = ["standard"], specifier = "==0.136.3" },
     { name = "psycopg2-binary", specifier = "==2.9.12" },
+    { name = "pyjwt", specifier = ">=2.13.0" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = "==2.0.50" },
     { name = "utils", editable = "packages/utils" },
 ]

@@ -9,6 +9,7 @@ dependencies = [
     "asyncpg==0.31.0",
     "fastapi[standard]==0.136.3",
     "psycopg2-binary==2.9.12",
+    "pyjwt>=2.13.0",
     "sqlalchemy[asyncio]==2.0.50",
     "utils",
 ]

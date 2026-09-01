@@ -37,3 +37,20 @@ class UserResponse(BaseModel):
     email: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserLoginResponse(BaseModel):
+    token: str
+    type: str
+
+
+class UserLoginRequest(BaseModel):
+    email: EmailStr
+    pwd: str
+
+    @field_validator("pwd")
+    @classmethod
+    def validate_pwd(cls, value):
+        if len(value) < 5:
+            raise PydanticCustomError("", "密码过于简单，请更换")
+        return value

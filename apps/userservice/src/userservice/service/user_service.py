@@ -1,12 +1,19 @@
 from userservice.service.base import BaseService
-from userservice.schema.user import UserRegister, UserResponse
+from userservice.schema.user import (
+    UserRegister,
+    UserResponse,
+    UserLoginResponse,
+)
 
 from userservice.model.user import User
 from sqlalchemy import select
 
 from userservice.core.exception.databse import DatabaseException
+from userservice.core.exception.auth import AuthException
 
-from utils.auth import PasswordService
+from utils.auth import PasswordService, create_token
+
+from userservice.core.config.webconfig import webSetting
 
 
 class UserService(BaseService):
@@ -95,3 +102,20 @@ class UserService(BaseService):
                 raise DatabaseException(
                     original_exception=e, message="数据库操作失败！--"
                 ) from e
+
+    async def login(self, email: str, pwd: str) -> UserLoginResponse:
+        stm = select(User).where(User.email == email)
+        result = await self.db.execute(stm)
+        dbUser = result.scalar_one()
+        if dbUser is None:
+            raise AuthException(message="用户不存在！")
+        ps = PasswordService()
+        isSame = ps.verify_password(dbUser.pwd, pwd)
+        if not isSame:
+            raise AuthException(message="用户名或密码错误！")
+
+        token = create_token(
+            data={"userId": dbUser.id}, secret_key=webSetting.jwt_secret_key
+        )
+
+        return UserLoginResponse(token=token, type="Bearer")

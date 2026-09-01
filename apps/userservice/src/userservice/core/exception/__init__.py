@@ -2,15 +2,16 @@ from userservice.core.exception.requestValidateErrorHandler import (
     request_validate_exception_handler,
 )
 
-from userservice.core.exception.errorHandler import (
-    exception_handler,
-)
+from userservice.core.exception.errorHandler import exception_handler
 from userservice.core.exception.httpExceptionHandler import (
     http_exception_handler,
 )
 from userservice.core.exception.databaseExceptionHandler import (
     databse_exception_handler,
 )
+
+from userservice.core.exception.auth import auth_exception_handler, AuthException
+
 from fastapi.exceptions import RequestValidationError
 from fastapi import FastAPI
 
@@ -24,4 +25,5 @@ def register_exception_handler(app: FastAPI):
     app.add_exception_handler(
         RequestValidationError, request_validate_exception_handler
     )
+    app.add_exception_handler(AuthException, auth_exception_handler)
     # app.add_exception_handler(Exception, exception_handler)
