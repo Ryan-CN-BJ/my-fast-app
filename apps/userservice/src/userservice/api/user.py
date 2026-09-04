@@ -13,6 +13,7 @@ from userservice.schema.response import (
 from userservice.schema.user import UserResponse
 
 from userservice.model.user import User
+from userservice.core.auth import get_current_user
 
 
 from sqlalchemy import select, func
@@ -41,6 +42,7 @@ async def register_user(
 async def get_user_by_id(
     id: Annotated[int, Query(..., description="用户id")],
     db: Annotated[AsyncSession, Depends(get_db)],
+    user: Annotated[UserResponse, Depends(get_current_user)],
 ):
     userservice = UserService(db)
     useResponse: UserResponse = await userservice.get_user_by_id(id)
