@@ -11,6 +11,8 @@ from userservice.schema.response import ErrorResponse
 from userservice.core.db import get_session_factory
 from userservice.service.setting_service import SettingService
 from contextlib import asynccontextmanager
+from userservice.core.logger import log_record
+import logging
 
 
 @asynccontextmanager
@@ -19,6 +21,11 @@ async def lifespan(app: FastAPI):
         await SettingService(db=session).initialize()
     yield
 
+
+logging.getLogger("uvicorn.error").disabled = True
+logging.getLogger("uvicorn.access").disabled = True
+
+log_record()
 
 app = FastAPI(lifespan=lifespan, responses={"default": {"model": ErrorResponse}})
 
