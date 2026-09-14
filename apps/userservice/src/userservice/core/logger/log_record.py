@@ -3,6 +3,9 @@ from userservice.core.config.logConfig import logSetting
 from userservice.core.config.webconfig import webSetting
 import sys
 from pathlib import Path
+from dataclasses import dataclass
+import time
+from enum import StrEnum
 
 
 def setLogger() -> None:
@@ -31,3 +34,34 @@ def setLogger() -> None:
             "{extra}",
         ),
     )
+
+
+class LogLevel(StrEnum):
+    TRACE = "TRACE"
+
+
+@dataclass
+class LogRecord:
+    message: str
+    duration_ms: str
+
+    def __post_init__(self):
+        self._start_time = time.perf_counter()
+
+    def _emit(self, level: LogLevel, exc: Exception | None) -> None:
+        data = self.asdict()
+        message = data.pop("message")
+
+        extra = {k: v for k, v in data.items() if v is not None}
+
+        if not extra.get("duration_ms", None):
+            extra["duration_ms"] = round(
+                (time.perf_counter() - self._start_time) * 1000, 2
+            )
+
+        log = logger.bind(**extra) if extra else logger
+
+        if exc:
+            log = log.opt(exception=exc)
+
+        getattr(log, level.lower())(message)
