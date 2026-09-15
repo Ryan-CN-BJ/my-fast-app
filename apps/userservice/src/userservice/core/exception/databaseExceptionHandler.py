@@ -5,13 +5,15 @@ from sqlalchemy.exc import IntegrityError
 
 
 def databse_exception_handler(request: Request, exception: Exception):
+    request.state.exception_handled = True
     assert isinstance(exception, DatabaseException)
-    print(
-        "__class__",
-        exception.original_exception.__class__,
-        exception.original_exception,
-        "exception",
-    )
+
+    # 日志记录
+    request_log = request.state.request_log
+    if request_log:
+        request_log.message = "请求异常"
+        request_log.warning()
+
     if exception.original_exception and isinstance(
         exception.original_exception, IntegrityError
     ):

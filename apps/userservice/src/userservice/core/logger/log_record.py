@@ -7,6 +7,8 @@ from dataclasses import dataclass
 import time
 from enum import StrEnum
 
+from contextvars import ContextVar
+
 
 def setLogger() -> None:
     logger.remove()
@@ -38,6 +40,15 @@ def setLogger() -> None:
 
 class LogLevel(StrEnum):
     TRACE = "TRACE"
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    SUCCESS = "SUCCESS"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+
+
+request_id_var = ContextVar("_requset_id", default=None)
 
 
 @dataclass
@@ -65,3 +76,24 @@ class LogRecord:
             log = log.opt(exception=exc)
 
         getattr(log, level.lower())(message)
+
+    def trace(self):
+        self._emit(level=LogLevel.TRACE)
+
+    def debug(self):
+        self._emit(level=LogLevel.DEBUG)
+
+    def info(self):
+        self._emit(level=LogLevel.INFO)
+
+    def success(self):
+        self._emit(level=LogLevel.SUCCESS)
+
+    def warning(self):
+        self._emit(level=LogLevel.WARNING)
+
+    def error(self, exc: Exception | None = None):
+        self._emit(level=LogLevel.ERROR, exc=exc)
+
+    def critical(self):
+        self._emit(level=LogLevel.CRITICAL)
