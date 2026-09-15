@@ -8,7 +8,30 @@ from sqlalchemy.ext.asyncio import (
 from userservice.core.config.dbconfig import dbSetting
 from collections.abc import AsyncGenerator
 
+from sqlalchemy import event
+import time
+
+from userservice.core.config.logConfig import logSetting
+
 _engine: AsyncEngine | None = None
+
+
+def _register_db_events(engine: AsyncEngine) -> None:
+    from userservice.core.logger.db_log import DBLog
+
+    @event.listens_for(engine.sync_engine, "before_cursor_execute", named=True)
+    def _before_cursor_execute(context, **kw):
+        context._query_start_time = time.perf_counter()
+
+    @event.listens_for(engine.sync_engine, "after_cursor_execute", named=True)
+    def _after_cursor_execute(context, **kw):
+        _query_start_time = context._query_start_time
+        duration_ms = (time.perf_counter() - _query_start_time) * 1000
+        if duration_ms > logSetting.slow_query_threshold:
+            DBLog(
+                message="慢查询",
+                duration_ms=duration_ms,
+            )
 
 
 def get_async_engine():
@@ -18,6 +41,7 @@ def get_async_engine():
         _engine = create_async_engine(
             url, pool_size=10, max_overflow=20, pool_pre_ping=True, echo=False
         )
+
     return _engine
 
 
