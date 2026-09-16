@@ -24,14 +24,23 @@ def _register_db_events(engine: AsyncEngine) -> None:
         context._query_start_time = time.perf_counter()
 
     @event.listens_for(engine.sync_engine, "after_cursor_execute", named=True)
-    def _after_cursor_execute(context, **kw):
+    def _after_cursor_execute(context, statement, parameters, **kw):
         _query_start_time = context._query_start_time
         duration_ms = (time.perf_counter() - _query_start_time) * 1000
         if duration_ms > logSetting.slow_query_threshold:
             DBLog(
                 message="慢查询",
-                duration_ms=duration_ms,
-            )
+                duration_ms=round(duration_ms, 2),
+                sql=statement,
+                params=str(parameters),
+            ).warning()
+        else:
+            DBLog(
+                message="sql执行",
+                duration_ms=round(duration_ms, 2),
+                sql=statement,
+                params=str(parameters),
+            ).debug()
 
 
 def get_async_engine():
